@@ -1,0 +1,23 @@
+{% extends 'basicapp/base.html' %}
+
+{% block body_block %}
+<!--page specific to correncyconverter.html page-->
+<div>
+    <h1>Currency Converter Page</h1>
+
+    <div class="jumbotron">
+        <form action="{% url 'basicapp:currency' %}" method="GET">
+            {% csrf_token %}
+            {{ currency_form.as_p }}
+            <input type="submit" name="Convert">
+        </form>
+    </div>
+    <div>
+        {% if flag %}
+            <h3>Amount:{{converted_value}}</h3>
+        {% else %}
+            <h3>Amount: _____ </h3>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
