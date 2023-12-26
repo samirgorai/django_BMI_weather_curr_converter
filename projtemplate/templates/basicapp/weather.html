@@ -10,6 +10,14 @@
              {{ weather_form.as_p }}
              <input class="btn btn-primary" type="submit" name="calculate">
          </form>
+         {% if Flag_lat_long == "NOTFOUND" %}
+         <div>
+            <p>Please enter valid city, state and country</p>
+         </div>
+         {% else %}
+
+         {% endif %}
+
          {% if flag %}
          <div class="container">
             <ul>

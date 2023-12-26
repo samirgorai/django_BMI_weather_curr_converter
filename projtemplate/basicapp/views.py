@@ -2,6 +2,7 @@ from django.shortcuts import render
 from basicapp.forms import Currency_form,Bmi_form,Weather_form
 import requests
 import json
+from sys import getsizeof
 # Create your views here.
 
 #--------------------home page--------------------
@@ -85,13 +86,13 @@ def currency(request):
 
 def weather(request):
     flag=False
-
+    Flag_lat_long='NOTFOUND'
     city=''
     country=''
     temp=''
     humidity=''
     wind_speed=''
-    content={'flag':flag,'weather_form':Weather_form() ,'city':city,'country':country,'temp':temp,'humidity':humidity,'wind_speed':wind_speed}
+    content={'Flag_lat_long':Flag_lat_long,'flag':flag,'weather_form':Weather_form() ,'city':city,'country':country,'temp':temp,'humidity':humidity,'wind_speed':wind_speed}
     if request.method == 'GET':
 
         weather_form=Weather_form(request.GET)
@@ -108,29 +109,40 @@ def weather(request):
             q=city+','+state+','+country
             last_part='&limit=1&appid=3afe718612962238f9e5a65484413f37'
             joined_url=first_url+q+last_part
-            response_lat_long=requests.get(joined_url).json()
-            lat=str(response_lat_long[0]['lat'])
-            lon=str(response_lat_long[0]['lon'])
-
-
+            response=requests.get(joined_url)
+            if response.status_code==200:
+                response_lat_long=response.json()
+                #print('---------------',len(response_lat_long),'-------------------')
+                if(len(response_lat_long)>0):
+                    lat=str(response_lat_long[0]['lat'])
+                    lon=str(response_lat_long[0]['lon'])
+                    Flag_lat_long="FOUND"
+                else:
+                    Flag_lat_long="NOTFOUND"
+                    return render(request,'basicapp/weather.html',context=content)
+                
             # STEP 2 getting weather based on lattitude and longitude
-            first_url_wed='https://api.openweathermap.org/data/2.5/weather?'
-            get_wetlatlon='lat='+lat+'&'+'lon='+lon
-            last_url_wed='&appid=3afe718612962238f9e5a65484413f37'
-            joined_url=first_url_wed+get_wetlatlon+last_url_wed
-            response=requests.get(joined_url).json()
-            
-            #result stored in varaiables
+            if(Flag_lat_long=='FOUND'):
 
-            city=response['name']
-            country=response['sys']['country']
-            temp=response['main']['temp']-273.15
-            temp=round(temp,2)
-            humidity=response['main']['humidity']
-            wind_speed=response['wind']['speed']*3.6
-            
-            flag=True
-            content={'flag':flag,'weather_form':weather_form ,'city':city,'country':country,'temp':temp,'humidity':humidity,'wind_speed':wind_speed}
+                
+                first_url_wed='https://api.openweathermap.org/data/2.5/weather?'
+                get_wetlatlon='lat='+lat+'&'+'lon='+lon
+                last_url_wed='&appid=3afe718612962238f9e5a65484413f37'
+                joined_url=first_url_wed+get_wetlatlon+last_url_wed
+                response=requests.get(joined_url)
+                if(response.status_code==200):
+
+                    response_res=response.json()
+                    #result stored in varaiables
+                    city=response_res['name']
+                    country=response_res['sys']['country']
+                    temp=response_res['main']['temp']-273.15
+                    temp=round(temp,2)
+                    humidity=response_res['main']['humidity']
+                    wind_speed=response_res['wind']['speed']*3.6
+                    
+                    flag=True
+                    content={'Flag_lat_long':Flag_lat_long,'flag':flag,'weather_form':weather_form ,'city':city,'country':country,'temp':temp,'humidity':humidity,'wind_speed':wind_speed}
         else:
             print(weather_form.errors)
 
