@@ -24,6 +24,7 @@ def bmi(request):
             height=float(request.GET.get('height'))/100
             flag=True
             calculated_BMI=weight/(height*height)
+            calculated_BMI=round(calculated_BMI,2)
             if(calculated_BMI<18.5):
                 category='Underweight:'
             elif(calculated_BMI>=18.5 and calculated_BMI<24.9):
@@ -32,7 +33,7 @@ def bmi(request):
                 category='Overweight:'
 
             else:
-                category='Obesity:'
+                category='Obese:'
 
         else:
             print(bmi_form.errors)
