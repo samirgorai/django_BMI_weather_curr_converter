@@ -1,8 +1,20 @@
 {% extends 'basicapp/base.html' %}
 
 {% block body_block %}
-<div>
-    <h1>BMI page</h1>
-</div>
+<div class="jumbotron">
+    <h1 >BMI</h1>
 
+    <div class="container">
+        <form  class=""  action="{% url 'basicapp:bmi' %}" method="GET">
+            {% csrf_token %}
+            {{ BMI_form.as_p }}
+            <input class="btn btn-primary" type="submit" name="calculate">
+        </form>
+        {% if flag %}
+            <h2>{{ category }}</h2>
+            <h3>BMI:{{calculated_BMI}}</h3>
+        {% endif %}
+    </div>
+
+</div>
 {% endblock %}

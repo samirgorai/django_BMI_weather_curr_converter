@@ -1,7 +1,27 @@
  {% extends 'basicapp/base.html' %}
 
  {% block body_block %}
-<div>
-    <h1>Weather page</h1>
-</div>
+ <div class="jumbotron">
+     <h1 >Weather</h1>
+ 
+     <div class="container">
+         <form  class=""  action="{% url 'basicapp:weather' %}" method="GET">
+             {% csrf_token %}
+             {{ weather_form.as_p }}
+             <input class="btn btn-primary" type="submit" name="calculate">
+         </form>
+         {% if flag %}
+         <div class="container">
+            <ul>
+                <li>CITY:{{city}}</li>
+                <li>COUNTRY: {{country}}</li>
+                <li>Temprarture: {{temp}} C</li>
+                <li>HUMIDITY:{{humidity}}</li>
+                <li>WIND SPEED:{{wind_speed}} km/hr</li>
+            </ul>
+        </div>
+         {% endif %}
+     </div>
+ 
+ </div>
  {% endblock %}

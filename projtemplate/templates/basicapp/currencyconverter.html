@@ -2,22 +2,19 @@
 
 {% block body_block %}
 <!--page specific to correncyconverter.html page-->
-<div>
-    <h1>Currency Converter Page</h1>
+<div class="jumbotron">
+    <h1 >Currency Converter</h1>
 
-    <div class="jumbotron">
-        <form action="{% url 'basicapp:currency' %}" method="GET">
+    <div class="container">
+        <form  class=""  action="{% url 'basicapp:currency' %}" method="GET">
             {% csrf_token %}
             {{ currency_form.as_p }}
-            <input type="submit" name="Convert">
+            <input class="btn btn-primary" type="submit" name="Convert">
         </form>
-    </div>
-    <div>
         {% if flag %}
-            <h3>Amount:{{converted_value}}</h3>
-        {% else %}
-            <h3>Amount: _____ </h3>
+        <h3>Amount:{{converted_value}}</h3>
         {% endif %}
     </div>
+
 </div>
 {% endblock %}
