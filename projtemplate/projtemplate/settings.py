@@ -73,10 +73,24 @@ WSGI_APPLICATION = 'projtemplate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+"""
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'demo_1',
+        'USER': 'postgres',
+        'PASSWORD': 'XXXXX',
+        'HOST': '',   # Set to the RDS endpoint or localhost if using local PostgreSQL
+        'PORT': '4532',   # Default PostgreSQL port is 5432
     }
 }
 
